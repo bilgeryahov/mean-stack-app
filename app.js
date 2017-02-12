@@ -11,14 +11,7 @@ const app     = express();
 
 app.set('port', 3000);
 
-app.get('/', function(req, res){
-
-   console.log('GET the homepage');
-
-   res
-       .status(200)
-       .sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/json', function(req, res){
 
