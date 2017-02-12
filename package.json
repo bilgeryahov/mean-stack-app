@@ -1,0 +1,30 @@
+{
+  "name": "mean-stack-app",
+  "version": "1.0.0",
+  "description": "MEAN stack application.",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.14.1"
+  },
+  "devDependencies": {
+    "mocha": "^3.2.0"
+  },
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bilgeryahov/mean-stack-app.git"
+  },
+  "keywords": [
+    "mean",
+    "stack",
+    "app"
+  ],
+  "author": "Bilger Yahov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bilgeryahov/mean-stack-app/issues"
+  },
+  "homepage": "https://github.com/bilgeryahov/mean-stack-app#readme"
+}
