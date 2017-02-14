@@ -8,11 +8,29 @@ const hotelData = require('../data/hotel-data.json');
 
 module.exports.hotelsGetAll = function(req, res){
 
-    console.log('GET all the hotels');
+    let returnData = {};
+    let logMessage = '';
+
+    if(req.query && req.query.offset && req.query.count){
+
+        let offset = parseInt(req.query.offset, 10);
+        let count = parseInt(req.query.count, 10);
+
+        returnData = hotelData.slice(offset, offset + count);
+        logMessage = 'GET ' + count + ' hotels starting from ' + offset;
+    }
+
+    if(Object.keys(returnData).length === 0){
+
+        returnData = hotelData;
+        logMessage = 'GET all the hotels'
+    }
+
+    console.log(logMessage);
 
     res
         .status(200)
-        .json(hotelData);
+        .json(returnData);
 };
 
 module.exports.hotelsGetOne = function(req, res){
