@@ -14,4 +14,9 @@ router
     .get(ctrlHotels.hotelsGetAll)
 ;
 
+router
+    .route('/hotels/:hotelID')
+    .get(ctrlHotels.hotelsGetOne)
+;
+
 module.exports = router;
