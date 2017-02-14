@@ -44,3 +44,13 @@ module.exports.hotelsGetOne = function(req, res){
         .status(200)
         .json(thisHotel);
 };
+
+module.exports.hotelsAddOne = function(req, res){
+
+  console.log('POST new hotel');
+  console.log(req.body);
+
+  res
+      .status(201)
+      .json(req.body);
+};
