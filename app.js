@@ -4,12 +4,12 @@
 
 'use strict';
 
-const express = require('express');
-const path    = require('path');
-const routes  = require('./api/routes');
+const express    = require('express');
+const path       = require('path');
+const routes     = require('./api/routes');
 const bodyParser = require('body-parser');
 
-const app     = express();
+const app        = express();
 
 app.set('port', 3000);
 
