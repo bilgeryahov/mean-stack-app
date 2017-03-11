@@ -3,46 +3,69 @@
  */
 
 'use strict';
-
+const dbconnection = require('../data/dbconnection.js');
 const hotelData = require('../data/hotel-data.json');
+const ObjectId = require('mongodb').ObjectID;
 
 module.exports.hotelsGetAll = function(req, res){
 
-    let returnData = {};
-    let logMessage = '';
+    let db = dbconnection.get();
+    let collection = db.collection('hotels');
 
-    if(req.query && req.query.offset && req.query.count){
+    let offset = 0;
+    let count = 5;
 
-        let offset = parseInt(req.query.offset, 10);
-        let count = parseInt(req.query.count, 10);
+    if(req.query && req.query.offset){
 
-        returnData = hotelData.slice(offset, offset + count);
-        logMessage = 'GET ' + count + ' hotels starting from ' + offset;
+        offset = parseInt(req.query.offset, 10);
     }
 
-    if(Object.keys(returnData).length === 0){
+    if(req.query && req.query.count){
 
-        returnData = hotelData;
-        logMessage = 'GET all the hotels'
+        count = parseInt(req.query.count, 10);
     }
 
-    console.log(logMessage);
+    collection
+        .find()
+        .skip(offset)
+        .limit(count)
+        .toArray(function(err, data){
 
-    res
-        .status(200)
-        .json(returnData);
+            if(err){
+
+                console.log(err);
+                return;
+            }
+
+            res
+                .status(200)
+                .json(data);
+        });
 };
 
 module.exports.hotelsGetOne = function(req, res){
 
+    let db = dbconnection.get();
+    let collection = db.collection('hotels');
+
     let hotelID = req.params.hotelID;
-    let thisHotel = hotelData[hotelID];
 
-    console.log('GET all the hotel ' + hotelID);
+    collection
+        .findOne({
+            _id: ObjectId(hotelID)
+        }, function(err, data){
 
-    res
-        .status(200)
-        .json(thisHotel);
+            if(err){
+
+                console.log(err);
+                return;
+            }
+
+            res
+                .status(200)
+                .json(data);
+        });
+
 };
 
 module.exports.hotelsAddOne = function(req, res){

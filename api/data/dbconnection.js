@@ -21,7 +21,7 @@ let open = function(){
         }
 
         _connection = db;
-        console.log('DB connection open. ', db);
+        console.log('DB connection open. ');
     });
 };
 
