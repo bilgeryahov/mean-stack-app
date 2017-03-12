@@ -4,33 +4,49 @@
 
 'use strict';
 
-let MongoClient = require('mongodb').MongoClient;
+let mongoose = require('mongoose');
 let dburl = 'mongodb://localhost:27017/meanhotel';
 
-let _connection = null;
+mongoose.connect(dburl);
 
-let open = function(){
+mongoose.connection.on('connected', function(){
 
-  // set the connection
-    MongoClient.connect(dburl, function(err, db){
+    console.log('Mongoose connected to ' + dburl);
+});
 
-        if(err){
+mongoose.connection.on('disconnected', function(){
 
-            console.log('DB connection has failed.');
-            return;
-        }
+    console.log('Mongoose disconnected from ' + dburl);
+});
 
-        _connection = db;
-        console.log('DB connection open. ');
-    });
-};
+mongoose.connection.on('error', function(err){
 
-let get = function(){
+    console.log('Mongoose connection error ' + err);
+});
 
-    return _connection;
-};
+process.on('SIGINT', function(){
 
-module.exports = {
-    open: open,
-    get: get
-};
+    mongoose.connection.close(function(){
+
+        console.log('Mongoose disconnected through app termination SIGINT');
+        process.exit(0);
+    })
+});
+
+process.on('SIGTERM', function(){
+
+    mongoose.connection.close(function(){
+
+        console.log('Mongoose disconnected through app termination SIGTERM');
+        process.exit(0);
+    })
+});
+
+process.once('SIGUSR2', function(){
+
+    mongoose.connection.close(function(){
+
+        console.log('Mongoose disconnected through app termination SIGUSR2');
+        process.kill(process.pid, 'SIGUSR2');
+    })
+});

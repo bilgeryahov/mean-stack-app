@@ -4,7 +4,7 @@
 
 'use strict';
 
-require('./api/data/dbconnection.js').open();
+require('./api/data/dbconnection.js');
 
 const express    = require('express');
 const path       = require('path');
