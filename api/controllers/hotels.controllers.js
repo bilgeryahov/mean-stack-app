@@ -70,10 +70,34 @@ module.exports.hotelsGetOne = function(req, res){
 
 module.exports.hotelsAddOne = function(req, res){
 
-  console.log('POST new hotel');
-  console.log(req.body);
+    let db = dbconnection.get();
+    let collection = db.collection('hotels');
+    let newHotel;
 
-  res
-      .status(201)
-      .json(req.body);
+    if(req.body && req.body.name && req.body.stars){
+
+        newHotel  = req.body;
+        newHotel.stars = parseInt(req.body.stars, 10);
+
+        collection.insertOne(newHotel, function(err, data){
+
+            if(err){
+
+                console.log(err);
+                return;
+            }
+
+            console.log('POST new hotel');
+            res
+                .status(201)
+                .json(data.ops);
+        });
+    }
+    else{
+
+        console.log('Body missing.');
+        res
+            .status(400)
+            .json({message: 'Missing body.'});
+    }
 };
