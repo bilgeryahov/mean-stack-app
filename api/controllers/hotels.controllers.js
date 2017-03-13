@@ -3,8 +3,7 @@
  */
 
 'use strict';
-const dbconnection = require('../data/dbconnection.js');
-const hotelData = require('../data/hotel-data.json');
+const dbconnection = require('../data/db.js');
 const ObjectId = require('mongodb').ObjectID;
 
 module.exports.hotelsGetAll = function(req, res){
