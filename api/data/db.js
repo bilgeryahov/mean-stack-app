@@ -7,14 +7,11 @@
 let mongoose = require('mongoose');
 let dburl = 'mongodb://localhost:27017/meanhotel';
 
-let _connection = null;
-
 mongoose.connect(dburl);
 
 mongoose.connection.on('connected', function(){
 
     console.log('Mongoose connected to ' + dburl);
-    _connection = mongoose.connection;
 });
 
 mongoose.connection.on('disconnected', function(){
@@ -54,12 +51,4 @@ process.once('SIGUSR2', function(){
     })
 });
 
-
-let get = function(){
-
-    return _connection;
-};
-
-module.exports = {
-    get: get
-};
+require('./hotels.model');
