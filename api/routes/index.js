@@ -6,8 +6,9 @@
 
 const express = require('express');
 const router = express.Router();
-const ctrlHotels = require('../controllers/hotels.controllers.js');
 
+const ctrlHotels = require('../controllers/hotels.controllers.js');
+const ctrlReviews = require('../controllers/reviews.controllers');
 
 router
     .route('/hotels')
@@ -22,5 +23,17 @@ router
 router
     .route('/hotels/new')
     .post(ctrlHotels.hotelsAddOne);
+
+// Reviews routes
+
+router
+    .route('/hotels/:hotelID/reviews')
+    .get(ctrlReviews.reviewsGetAll)
+;
+
+router
+    .route('/hotels/:hotelID/reviews/:reviewID')
+    .get(ctrlReviews.reviewsGetOne)
+;
 
 module.exports = router;
