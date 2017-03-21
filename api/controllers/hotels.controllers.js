@@ -169,36 +169,52 @@ module.exports.hotelsGetOne = function(req, res){
         });
 };
 
+const _splitArray = function(input){
+
+    let output = [];
+
+    if(input && input.length > 0){
+
+        output = input.split(';');
+    }
+
+    return output;
+};
+
 module.exports.hotelsAddOne = function(req, res){
 
-    let db = dbconnection.get();
-    let collection = db.collection('hotels');
-    let newHotel;
-
-    if(req.body && req.body.name && req.body.stars){
-
-        newHotel  = req.body;
-        newHotel.stars = parseInt(req.body.stars, 10);
-
-        collection.insertOne(newHotel, function(err, data){
+    Hotel
+        .create({
+            name: req.body.name,
+            description: req.body.description,
+            stars: parseInt(req.body.stars, 10),
+            services: _splitArray(req.body.services),
+            photos: _splitArray(req.body.photos),
+            currency: req.body.currency,
+            location: {
+                address: req.body.address,
+                coordinates:[
+                    parseFloat(req.body.lng),
+                    parseFloat(req.body.lat)
+                ]
+            }
+        }, function(err, hotel){
 
             if(err){
 
-                console.log(err);
+                console.log('Error creating a new hotel!');
+
+                res
+                    .status(400)
+                    .json(err);
+
                 return;
             }
 
-            console.log('POST new hotel');
+            console.log('Hotel created!');
+
             res
                 .status(201)
-                .json(data.ops);
+                .json(hotel);
         });
-    }
-    else{
-
-        console.log('Body missing.');
-        res
-            .status(400)
-            .json({message: 'Missing body.'});
-    }
 };

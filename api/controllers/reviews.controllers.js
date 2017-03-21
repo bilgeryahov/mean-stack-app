@@ -95,3 +95,71 @@ module.exports.reviewsGetOne = function(req, res){
                 .json(response.message);
         });
 };
+
+const _addReview = function(req, res, hotel){
+
+    // The model instance.
+    hotel.reviews.push({
+        name: req.body.name,
+        rating: parseInt(req.body.rating, 10),
+        review: req.body.review
+    });
+
+    // The model instance.
+    hotel.save(function(err, hotelUpdated){
+
+        if(err){
+
+            res
+                .status(500)
+                .json(err);
+
+            return;
+        }
+
+        res
+            .status(201)
+            .json(hotelUpdated.reviews[hotelUpdated.reviews.length - 1]);
+    });
+};
+
+module.exports.reviewsAddOne = function(req, res){
+
+    let hotelID = req.params.hotelID;
+    console.log('Get all reviews for hotel with id ', hotelID);
+
+    Hotel
+        .findById(hotelID)
+        .select('reviews')
+        .exec(function(err, hotel){
+
+            let response = {
+                status: 200,
+                message: []
+            };
+
+            if(err){
+
+                console.log('Error finding the hotel with id ', hotelID);
+                response.status = 500;
+                response.message = err;
+            }
+            else if(!hotel){
+
+                console.log('Hotel with ID ' + hotelID + ' not found in the database!');
+                response.status = 404;
+                response.message = {
+                    message: 'Hotel with ID ' + hotelID + ' not found!'
+                };
+            }
+            else{
+
+                return _addReview(req, res, hotel);
+            }
+
+            res
+                .status(response.status)
+                .json(response.message);
+
+        });
+};

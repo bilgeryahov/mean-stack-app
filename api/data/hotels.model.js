@@ -9,7 +9,7 @@ const reviewSchema = new mongoose.Schema({
         type: Number,
         min: 0,
         max: 5,
-        default: 0
+        "default": 0
     },
     review: {
         type: String,
@@ -17,7 +17,7 @@ const reviewSchema = new mongoose.Schema({
     },
     createdOn:{
         type: Date,
-        default: Date.now()
+        "default": Date.now()
     }
 });
 
@@ -38,7 +38,7 @@ const hotelSchema = new mongoose.Schema({
         type: Number,
         min: 0,
         max: 5,
-        default: 0
+        "default": 0
     },
     services: [String],
     description: String,

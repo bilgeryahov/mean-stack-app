@@ -13,27 +13,21 @@ const ctrlReviews = require('../controllers/reviews.controllers');
 router
     .route('/hotels')
     .get(ctrlHotels.hotelsGetAll)
-;
+    .post(ctrlHotels.hotelsAddOne);
 
 router
     .route('/hotels/:hotelID')
-    .get(ctrlHotels.hotelsGetOne)
-;
-
-router
-    .route('/hotels/new')
-    .post(ctrlHotels.hotelsAddOne);
+    .get(ctrlHotels.hotelsGetOne);
 
 // Reviews routes
 
 router
     .route('/hotels/:hotelID/reviews')
     .get(ctrlReviews.reviewsGetAll)
-;
+    .post(ctrlReviews.reviewsAddOne);
 
 router
     .route('/hotels/:hotelID/reviews/:reviewID')
-    .get(ctrlReviews.reviewsGetOne)
-;
+    .get(ctrlReviews.reviewsGetOne);
 
 module.exports = router;
