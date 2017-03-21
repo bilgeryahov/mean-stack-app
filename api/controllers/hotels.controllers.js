@@ -218,3 +218,75 @@ module.exports.hotelsAddOne = function(req, res){
                 .json(hotel);
         });
 };
+
+module.exports.hotelsUpdateOne = function(req, res){
+
+    let hotelID = req.params.hotelID;
+    console.log(`Get hotel with id ${hotelID}`);
+
+    Hotel
+        .findById(hotelID)
+        .select("-reviews -rooms")
+        .exec(function(err, hotel){
+
+            let response = {
+                status: 200,
+                message: hotel
+            };
+
+            if(err){
+
+                console.log('Error querying for hotels!');
+                response.status = 500;
+                response.message = err;
+            }
+            else if(!hotel){
+
+                console.log('Hotel with id ' + hotelID + ' not found!');
+                response.status = 404;
+                response.message = {
+                    message: 'Hotel with this ID has not been found!'
+                };
+            }
+
+            if(response.status !== 200){
+
+                res
+                    .status(response.status)
+                    .json(response.message);
+
+                return;
+            }
+
+            hotel.name = req.body.name;
+            hotel.description = req.body.description;
+            hotel.stars = parseInt(req.body.stars, 10);
+            hotel.services = _splitArray(req.body.services);
+            hotel.photos = _splitArray(req.body.photos);
+            hotel.currency = req.body.currency;
+            hotel.location = {
+                address: req.body.address,
+                coordinates:[
+                    parseFloat(req.body.lng),
+                    parseFloat(req.body.lat)
+                ]
+            };
+
+            hotel.save(function(err, hotelUpdated){
+
+                if(err){
+
+                    console.log("Error while trying to modify a hotel!");
+                    res
+                        .status(500)
+                        .json(err);
+
+                    return;
+                }
+
+                res
+                    .status(204)
+                    .json();
+            })
+        });
+};

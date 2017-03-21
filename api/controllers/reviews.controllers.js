@@ -16,7 +16,7 @@ module.exports.reviewsGetAll = function(req, res){
 
             let response = {
                 status: 200,
-                message: []
+                message: {}
             };
 
             if(err){
@@ -60,7 +60,7 @@ module.exports.reviewsGetOne = function(req, res){
 
             let response = {
                 status: 200,
-                message: []
+                message: {}
             };
 
             if(err){
@@ -135,7 +135,7 @@ module.exports.reviewsAddOne = function(req, res){
 
             let response = {
                 status: 200,
-                message: []
+                message: {}
             };
 
             if(err){
@@ -161,5 +161,87 @@ module.exports.reviewsAddOne = function(req, res){
                 .status(response.status)
                 .json(response.message);
 
+        });
+};
+
+module.exports.reviewsUpdateOne = function(req, res){
+
+    let hotelID = req.params.hotelID;
+    let reviewID = req.params.reviewID;
+
+    console.log(`Updating review with id ${reviewID}  for hotel with id ${hotelID}`);
+
+    Hotel
+        .findById(hotelID)
+        .select('reviews')
+        .exec(function(err, hotel){
+
+            let thisReview;
+
+            let response = {
+                status: 200,
+                message: {}
+            };
+
+            if(err){
+
+                console.log('Error finding the hotel with id ', hotelID);
+                response.status = 500;
+                response.message = err;
+            }
+            else if(!hotel){
+
+                console.log('Hotel with ID ' + hotelID + ' not found in the database!');
+                response.status = 404;
+                response.message = {
+                    message: 'Hotel with ID ' + hotelID + ' not found!'
+                };
+            }
+            else{
+
+                // Get the review.
+                thisReview = hotel.reviews.id(reviewID);
+
+                if(!thisReview){
+
+                    response.status = 404;
+                    response.message = {
+                        message: 'Review with ID ' + reviewID + ' not found!'
+                    };
+                }
+            }
+
+            if(response.status !== 200){
+
+                res
+                    .status(response.status)
+                    .json(response.message);
+
+                return;
+            }
+
+            thisReview.name = req.body.name;
+            thisReview.rating = req.body.rating;
+            thisReview.review = req.body.review;
+
+            hotel.save(function(err, hotelUpdated){
+
+                if(err){
+
+                    console.log('Problem updating review ' + reviewID + ' from hotel ' + hotelID);
+
+                    res
+                        .status(500)
+                        .json(err);
+
+                    return;
+                }
+
+                console.log(`Review ${reviewID}, from hotel ${hotelID} updated!`);
+
+                res
+                    .status(204)
+                    .json();
+            });
         });
 };
