@@ -7,10 +7,42 @@
 const mongoose = require('mongoose');
 const Hotel = mongoose.model('Hotel');
 
+const runGeoQuery = function(req, res){
+
+    let lng = parseFloat(req.query.lng);
+    let lat = parseFloat(req.query.lat);
+
+    // A geoJSON point.
+    let point = {
+        type: "Point",
+        coordinates: [lng, lat]
+    };
+
+    let geoOptions = {
+        spherical: true,
+        maxDistance: 2000,
+        num: 5
+    };
+
+    Hotel
+        .geoNear(point, geoOptions, function(err, results, stats){
+
+            console.log('Geo stats ', stats);
+            res
+                .status(200)
+                .json(results);
+        });
+};
+
 module.exports.hotelsGetAll = function(req, res){
 
     let offset = 0;
     let count = 5;
+
+    if(req.query && req.query.lat && req.query.lng){
+
+        return runGeoQuery(req, res);
+    }
 
     if(req.query && req.query.offset){
 
