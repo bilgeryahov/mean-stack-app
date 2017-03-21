@@ -287,6 +287,45 @@ module.exports.hotelsUpdateOne = function(req, res){
                 res
                     .status(204)
                     .json();
-            })
+            });
+        });
+};
+
+module.exports.hotelsDeleteOne = function(req, res){
+
+    const hotelID = req.params.hotelID;
+
+    Hotel
+        .findByIdAndRemove(hotelID)
+        .exec(function(err, hotel){
+
+            let response = {
+                status: 204,
+                message: {}
+            };
+
+            if(err){
+
+                console.log('Error while deleting hotel ' + hotelID);
+                response.status = 500;
+                response.message = err;
+            }
+            else if(!hotel){
+
+                console.log('Hotel with ID ' + hotelID + ' not found!');
+                response.status = 404;
+                response.message= {
+                    message: 'Hotel with ID ' + hotelID + ' was not found'
+                };
+            }
+
+            if(response.status === 204){
+
+                console.log('Deleted hotel with ID ' + hotelID);
+            }
+
+            res
+                .status(response.status)
+                .json(response.message);
         });
 };
