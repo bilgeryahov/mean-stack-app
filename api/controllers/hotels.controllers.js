@@ -12,6 +12,19 @@ const runGeoQuery = function(req, res){
     let lng = parseFloat(req.query.lng);
     let lat = parseFloat(req.query.lat);
 
+    if(isNaN(lng) || isNaN(lat)){
+
+        console.log('lng or lat did not come as floating point numbers!');
+
+        res
+            .status(400)
+            .json({
+                message: "Lng and lat should be floating point numbers!"
+            });
+
+        return;
+    }
+
     // A geoJSON point.
     let point = {
         type: "Point",
@@ -27,6 +40,19 @@ const runGeoQuery = function(req, res){
     Hotel
         .geoNear(point, geoOptions, function(err, results, stats){
 
+            if(err){
+
+                console.log('Error querying for hotels with geo coordinates!');
+
+                res
+                    .status(500)
+                    .json({
+                        message: err
+                    });
+
+                return;
+            }
+
             console.log('Geo stats ', stats);
             res
                 .status(200)
@@ -38,6 +64,8 @@ module.exports.hotelsGetAll = function(req, res){
 
     let offset = 0;
     let count = 5;
+
+    const maxCount = 10;
 
     if(req.query && req.query.lat && req.query.lng){
 
@@ -54,6 +82,32 @@ module.exports.hotelsGetAll = function(req, res){
         count = parseInt(req.query.count, 10);
     }
 
+    if(isNaN(offset) || isNaN(count)){
+
+        console.log('Offset or count did not come as numbers!');
+
+        res
+            .status(400)
+            .json({
+                message: "Count and offset should be numbers!"
+            });
+
+        return;
+    }
+
+    if(count > maxCount){
+
+        console.log('Count exceeded the max allowed limit!');
+
+        res
+            .status(400)
+            .json({
+                message: "Count should be less than " + (maxCount + 1)
+            });
+
+        return;
+    }
+
     Hotel
         .find()
         .skip(offset)
@@ -62,7 +116,14 @@ module.exports.hotelsGetAll = function(req, res){
 
             if(err){
 
-                console.log(err);
+                console.log('Error querying for hotels!');
+
+                res
+                    .status(500)
+                    .json({
+                        message: err
+                    });
+
                 return;
             }
 
@@ -76,22 +137,35 @@ module.exports.hotelsGetAll = function(req, res){
 module.exports.hotelsGetOne = function(req, res){
 
     let hotelID = req.params.hotelID;
+    console.log(`Get hotel with id ${hotelID}`);
 
     Hotel
         .findById(hotelID)
         .exec(function(err, hotel){
 
+            let response = {
+                status: 200,
+                message: hotel
+            };
+
             if(err){
 
-                console.log(err);
-                return;
+                console.log('Error querying for hotels!');
+                response.status = 500;
+                response.message = err;
+            }
+            else if(!hotel){
+
+                console.log('Hotel with id ' + hotelID + ' not found!');
+                response.status = 404;
+                response.message = {
+                        message: 'Hotel with this ID has not been found!'
+                };
             }
 
-            console.log('Found hotel with id ', hotelID);
-
             res
-                .status(200)
-                .json(hotel);
+                .status(response.status)
+                .json(response.message);
         });
 };
 
