@@ -1,7 +1,3 @@
-/**
- * Created by Bilger on 14-Feb-17.
- */
-
 'use strict';
 
 const mongoose = require('mongoose');
@@ -14,12 +10,12 @@ const runGeoQuery = function(req, res){
 
     if(isNaN(lng) || isNaN(lat)){
 
-        console.log('lng or lat did not come as floating point numbers!');
+        console.log('Error: lng or lat did not come as floating point numbers!');
 
         res
             .status(400)
             .json({
-                message: "Lng and lat should be floating point numbers!"
+                message: "Lng and lat should be floating point numbers."
             });
 
         return;
@@ -42,7 +38,7 @@ const runGeoQuery = function(req, res){
 
             if(err){
 
-                console.log('Error querying for hotels with geo coordinates!');
+                console.log('Error: querying for hotels with geo coordinates went wrong!');
 
                 res
                     .status(500)
@@ -53,7 +49,7 @@ const runGeoQuery = function(req, res){
                 return;
             }
 
-            console.log('Geo stats ', stats);
+            console.log('Info: Geo stats ', stats);
             res
                 .status(200)
                 .json(results);
@@ -84,12 +80,12 @@ module.exports.hotelsGetAll = function(req, res){
 
     if(isNaN(offset) || isNaN(count)){
 
-        console.log('Offset or count did not come as numbers!');
+        console.log('Error: offset or count did not come as numbers!');
 
         res
             .status(400)
             .json({
-                message: "Count and offset should be numbers!"
+                message: "Count and offset should be numbers."
             });
 
         return;
@@ -97,12 +93,12 @@ module.exports.hotelsGetAll = function(req, res){
 
     if(count > maxCount){
 
-        console.log('Count exceeded the max allowed limit!');
+        console.log('Error: count exceeded the max allowed limit!');
 
         res
             .status(400)
             .json({
-                message: "Count should be less than " + (maxCount + 1)
+                message: "Count should be less than " + (maxCount + 1) + '.'
             });
 
         return;
@@ -116,7 +112,7 @@ module.exports.hotelsGetAll = function(req, res){
 
             if(err){
 
-                console.log('Error querying for hotels!');
+                console.log('Error: querying for hotels went wrong!');
 
                 res
                     .status(500)
@@ -127,7 +123,7 @@ module.exports.hotelsGetAll = function(req, res){
                 return;
             }
 
-            console.log('Found hotels ', hotels.length);
+            console.log('Info: found hotels ', hotels.length);
             res
                 .status(200)
                 .json(hotels);
@@ -137,7 +133,6 @@ module.exports.hotelsGetAll = function(req, res){
 module.exports.hotelsGetOne = function(req, res){
 
     let hotelID = req.params.hotelID;
-    console.log(`Get hotel with id ${hotelID}`);
 
     Hotel
         .findById(hotelID)
@@ -150,16 +145,16 @@ module.exports.hotelsGetOne = function(req, res){
 
             if(err){
 
-                console.log('Error querying for hotels!');
+                console.log('Error: querying for a hotel went wrong!');
                 response.status = 500;
                 response.message = err;
             }
             else if(!hotel){
 
-                console.log('Hotel with id ' + hotelID + ' not found!');
+                console.log('Info: hotel with id ' + hotelID + ' not found!');
                 response.status = 404;
                 response.message = {
-                        message: 'Hotel with this ID has not been found!'
+                        message: 'Hotel with this ID has not been found.'
                 };
             }
 
@@ -202,7 +197,7 @@ module.exports.hotelsAddOne = function(req, res){
 
             if(err){
 
-                console.log('Error creating a new hotel!');
+                console.log('Error: creating a new hotel went wrong!');
 
                 res
                     .status(400)
@@ -211,7 +206,7 @@ module.exports.hotelsAddOne = function(req, res){
                 return;
             }
 
-            console.log('Hotel created!');
+            console.log('Info: Hotel created!');
 
             res
                 .status(201)
@@ -222,7 +217,6 @@ module.exports.hotelsAddOne = function(req, res){
 module.exports.hotelsUpdateOne = function(req, res){
 
     let hotelID = req.params.hotelID;
-    console.log(`Get hotel with id ${hotelID}`);
 
     Hotel
         .findById(hotelID)
@@ -236,16 +230,16 @@ module.exports.hotelsUpdateOne = function(req, res){
 
             if(err){
 
-                console.log('Error querying for hotels!');
+                console.log('Error: querying a for hotel went wrong!');
                 response.status = 500;
                 response.message = err;
             }
             else if(!hotel){
 
-                console.log('Hotel with id ' + hotelID + ' not found!');
+                console.log('Error: hotel with id ' + hotelID + ' not found!');
                 response.status = 404;
                 response.message = {
-                    message: 'Hotel with this ID has not been found!'
+                    message: 'Hotel with this ID has not been found.'
                 };
             }
 
@@ -276,7 +270,7 @@ module.exports.hotelsUpdateOne = function(req, res){
 
                 if(err){
 
-                    console.log("Error while trying to modify a hotel!");
+                    console.log("Error: trying to modify a hotel went wrong!");
                     res
                         .status(500)
                         .json(err);
@@ -306,22 +300,22 @@ module.exports.hotelsDeleteOne = function(req, res){
 
             if(err){
 
-                console.log('Error while deleting hotel ' + hotelID);
+                console.log('Error: deleting hotel ' + hotelID + ' went wrong!');
                 response.status = 500;
                 response.message = err;
             }
             else if(!hotel){
 
-                console.log('Hotel with ID ' + hotelID + ' not found!');
+                console.log('Error: hotel with ID ' + hotelID + ' not found!');
                 response.status = 404;
                 response.message= {
-                    message: 'Hotel with ID ' + hotelID + ' was not found'
+                    message: 'Hotel with ID ' + hotelID + ' has not been not found.'
                 };
             }
 
             if(response.status === 204){
 
-                console.log('Deleted hotel with ID ' + hotelID);
+                console.log('Info: deleted hotel with ID ' + hotelID);
             }
 
             res

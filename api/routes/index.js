@@ -1,7 +1,3 @@
-/**
- * Created by Bilger on 14-Feb-17.
- */
-
 'use strict';
 
 const express = require('express');
@@ -9,6 +5,8 @@ const router = express.Router();
 
 const ctrlHotels = require('../controllers/hotels.controllers.js');
 const ctrlReviews = require('../controllers/reviews.controllers');
+
+// Hotels routes
 
 router
     .route('/hotels')
