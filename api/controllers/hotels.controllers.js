@@ -239,15 +239,35 @@ module.exports.hotelsUpdateOne = function(req, res){
 
     let hotelID = req.params.hotelID;
 
+    let response = {
+        status: 200,
+        message: hotel
+    };
+
+    if(req.body && req.body.stars){
+
+        req.body.stars = parseInt(req.body.stars, 10);
+    }
+
+    let coordinates = [];
+
+    if(req.body && req.body.lng && req.body.lat){
+        req.body.lng = parseFloat(req.body.lng);
+        req.body.lat = parseFloat(req.body.lat);
+
+        coordinates = [req.body.lng, req.body.lat];
+    }
+    else if(req.body && ((!req.body.lng && req.body.lat)||(req.body.lng && !req.body.lat))){
+
+        console.log('Error: geo coordinates should be passed together!');
+        response.status = 400;
+        response.message = {message: "Geo coordinates should be passed together."};
+    }
+
     Hotel
         .findById(hotelID)
         .select("-reviews -rooms")
         .exec(function(err, hotel){
-
-            let response = {
-                status: 200,
-                message: hotel
-            };
 
             if(err){
 
@@ -262,26 +282,6 @@ module.exports.hotelsUpdateOne = function(req, res){
                 response.message = {
                     message: 'Hotel with this ID has not been found.'
                 };
-            }
-
-            if(req.body && req.body.stars){
-
-                req.body.stars = parseInt(req.body.stars, 10);
-            }
-
-            let coordinates = [];
-
-            if(req.body && req.body.lng && req.body.lat){
-                req.body.lng = parseFloat(req.body.lng);
-                req.body.lat = parseFloat(req.body.lat);
-
-                coordinates = [req.body.lng, req.body.lat];
-            }
-            else if(req.body && ((!req.body.lng && req.body.lat)||(req.body.lng && !req.body.lat))){
-
-                console.log('Error: geo coordinates should be passed together!');
-                response.status = 400;
-                response.message = {message: "Geo coordinates should be passed together."};
             }
 
             if(response.status !== 200){
