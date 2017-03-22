@@ -7,7 +7,6 @@ const Hotel = mongoose.model('Hotel');
 module.exports.reviewsGetAll = function(req, res){
 
     let hotelID = req.params.hotelID;
-    console.log('Get all reviews for hotel with id ', hotelID);
 
     Hotel
         .findById(hotelID)
@@ -21,16 +20,16 @@ module.exports.reviewsGetAll = function(req, res){
 
             if(err){
 
-                console.log('Error finding the hotel with id ', hotelID);
+                console.log('Error: finding the hotel with id ', hotelID + ' did not succeed!');
                 response.status = 500;
                 response.message = err;
             }
             else if(!hotel){
 
-                console.log('Hotel with ID ' + hotelID + ' not found in the database!');
+                console.log('Error: hotel with ID ' + hotelID + ' not found in the database!');
                 response.status = 404;
                 response.message = {
-                    message: 'Hotel with ID ' + hotelID + ' not found!'
+                    message: 'Hotel with ID ' + hotelID + ' has not been found.'
                 };
             }
             else{
@@ -41,7 +40,6 @@ module.exports.reviewsGetAll = function(req, res){
             res
                 .status(response.status)
                 .json(response.message);
-
         });
 };
 
@@ -50,8 +48,6 @@ module.exports.reviewsGetOne = function(req, res){
 
     let hotelID = req.params.hotelID;
     let reviewID = req.params.reviewID;
-
-    console.log(`Get review with id ${reviewID}  for hotel with id ${hotelID}`);
 
     Hotel
         .findById(hotelID)
@@ -65,16 +61,16 @@ module.exports.reviewsGetOne = function(req, res){
 
             if(err){
 
-                console.log('Error finding the hotel with id ', hotelID);
+                console.log('Error: finding the hotel with id ', hotelID + ' did not succeed!');
                 response.status = 500;
                 response.message = err;
             }
             else if(!hotel){
 
-                console.log('Hotel with ID ' + hotelID + ' not found in the database!');
+                console.log('Error: hotel with ID ' + hotelID + ' not found in the database!');
                 response.status = 404;
                 response.message = {
-                    message: 'Hotel with ID ' + hotelID + ' not found!'
+                    message: 'Hotel with ID ' + hotelID + ' has not been found.'
                 };
             }
             else{
@@ -85,7 +81,7 @@ module.exports.reviewsGetOne = function(req, res){
 
                     response.status = 404;
                     response.message = {
-                        message: 'Review with ID ' + reviewID + ' not found!'
+                        message: 'Review with ID ' + reviewID + ' has not been found.'
                     };
                 }
             }
@@ -126,7 +122,6 @@ const _addReview = function(req, res, hotel){
 module.exports.reviewsAddOne = function(req, res){
 
     let hotelID = req.params.hotelID;
-    console.log('Get all reviews for hotel with id ', hotelID);
 
     Hotel
         .findById(hotelID)
@@ -140,16 +135,16 @@ module.exports.reviewsAddOne = function(req, res){
 
             if(err){
 
-                console.log('Error finding the hotel with id ', hotelID);
+                console.log('Error: finding the hotel with id ', hotelID + ' did not succeed!');
                 response.status = 500;
                 response.message = err;
             }
             else if(!hotel){
 
-                console.log('Hotel with ID ' + hotelID + ' not found in the database!');
+                console.log('Error: hotel with ID ' + hotelID + ' not found in the database!');
                 response.status = 404;
                 response.message = {
-                    message: 'Hotel with ID ' + hotelID + ' not found!'
+                    message: 'Hotel with ID ' + hotelID + ' has not been found.'
                 };
             }
             else{
@@ -160,7 +155,6 @@ module.exports.reviewsAddOne = function(req, res){
             res
                 .status(response.status)
                 .json(response.message);
-
         });
 };
 
@@ -168,8 +162,6 @@ module.exports.reviewsUpdateOne = function(req, res){
 
     let hotelID = req.params.hotelID;
     let reviewID = req.params.reviewID;
-
-    console.log(`Updating review with id ${reviewID}  for hotel with id ${hotelID}`);
 
     Hotel
         .findById(hotelID)
@@ -185,7 +177,7 @@ module.exports.reviewsUpdateOne = function(req, res){
 
             if(err){
 
-                console.log('Error finding the hotel with id ', hotelID);
+                console.log('Error: finding the hotel with id ', hotelID + ' did not succeed!');
                 response.status = 500;
                 response.message = err;
             }
@@ -194,7 +186,7 @@ module.exports.reviewsUpdateOne = function(req, res){
                 console.log('Hotel with ID ' + hotelID + ' not found in the database!');
                 response.status = 404;
                 response.message = {
-                    message: 'Hotel with ID ' + hotelID + ' not found!'
+                    message: 'Hotel with ID ' + hotelID + ' has not been found.'
                 };
             }
             else{
@@ -206,7 +198,7 @@ module.exports.reviewsUpdateOne = function(req, res){
 
                     response.status = 404;
                     response.message = {
-                        message: 'Review with ID ' + reviewID + ' not found!'
+                        message: 'Review with ID ' + reviewID + ' has not been found.'
                     };
                 }
             }
@@ -228,7 +220,7 @@ module.exports.reviewsUpdateOne = function(req, res){
 
                 if(err){
 
-                    console.log('Problem updating review ' + reviewID + ' from hotel ' + hotelID);
+                    console.log('Error: problem updating review ' + reviewID + ' from hotel ' + hotelID + '!');
 
                     res
                         .status(500)
@@ -237,7 +229,7 @@ module.exports.reviewsUpdateOne = function(req, res){
                     return;
                 }
 
-                console.log(`Review ${reviewID}, from hotel ${hotelID} updated!`);
+                console.log(`Info: Review ${reviewID}, from hotel ${hotelID} updated!`);
 
                 res
                     .status(204)
@@ -250,8 +242,6 @@ module.exports.reviewsDeleteOne = function(req, res){
 
     let hotelID = req.params.hotelID;
     let reviewID = req.params.reviewID;
-
-    console.log(`Deleting review with id ${reviewID}  for hotel with id ${hotelID}`);
 
     Hotel
         .findById(hotelID)
@@ -267,7 +257,7 @@ module.exports.reviewsDeleteOne = function(req, res){
 
             if(err){
 
-                console.log('Error finding the hotel with id ', hotelID);
+                console.log('Error: finding the hotel with id ', hotelID + ' did not succeed!');
                 response.status = 500;
                 response.message = err;
             }
@@ -276,7 +266,7 @@ module.exports.reviewsDeleteOne = function(req, res){
                 console.log('Hotel with ID ' + hotelID + ' not found in the database!');
                 response.status = 404;
                 response.message = {
-                    message: 'Hotel with ID ' + hotelID + ' not found!'
+                    message: 'Hotel with ID ' + hotelID + ' has not been found.'
                 };
             }
             else{
@@ -288,7 +278,7 @@ module.exports.reviewsDeleteOne = function(req, res){
 
                     response.status = 404;
                     response.message = {
-                        message: 'Review with ID ' + reviewID + ' not found!'
+                        message: 'Review with ID ' + reviewID + ' has not been found.'
                     };
                 }
             }
@@ -308,7 +298,7 @@ module.exports.reviewsDeleteOne = function(req, res){
 
                 if(err){
 
-                    console.log('Problem deleting review ' + reviewID + ' from hotel ' + hotelID);
+                    console.log('Error: problem deleting review ' + reviewID + ' from hotel ' + hotelID + '!');
 
                     res
                         .status(500)
@@ -317,7 +307,7 @@ module.exports.reviewsDeleteOne = function(req, res){
                     return;
                 }
 
-                console.log(`Review ${reviewID}, from hotel ${hotelID} deleted!`);
+                console.log(`Info: Review ${reviewID}, from hotel ${hotelID} deleted!`);
 
                 res
                     .status(204)
