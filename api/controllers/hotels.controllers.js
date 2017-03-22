@@ -323,22 +323,6 @@ module.exports.hotelsUpdateOne = function(req, res){
             hotel.location.address = req.body.address || hotel.location.address;
             hotel.location.coordinates = coordinates || hotel.location.coordinates;
 
-            for(let member in req.body){
-
-                if(req.body.hasOwnProperty(member)){
-
-                    if(!hotel[member]){
-
-                        console.log('Error: the provided PUT parameter is not a valid attribute on a hotel entity!');
-                        res
-                            .status(400)
-                            .json({message: "The provided parameter is not a valid attribute on this entity."});
-
-                        return;
-                    }
-                }
-            }
-
             hotel.save(function(err, hotelUpdated){
 
                 if(err){
