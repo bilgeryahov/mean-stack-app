@@ -237,37 +237,58 @@ module.exports.hotelsAddOne = function(req, res){
 
 module.exports.hotelsUpdateOne = function(req, res){
 
-    let hotelID = req.params.hotelID;
-
-    let response = {
+    let responseBeforeExec = {
         status: 200,
-        message: hotel
+        message: {message:"OK"}
     };
 
-    if(req.body && req.body.stars){
+    let hotelID = req.params.hotelID;
+
+    if(Object.keys(req.body).length === 0){
+
+        console.log('Error: The PUT request did not receive a body!');
+        responseBeforeExec.status = 400;
+        responseBeforeExec.message = {message: "The update request needs a body."};
+    }
+
+    if(req.body.stars){
 
         req.body.stars = parseInt(req.body.stars, 10);
     }
 
     let coordinates = [];
 
-    if(req.body && req.body.lng && req.body.lat){
+    if(req.body.lng && req.body.lat){
         req.body.lng = parseFloat(req.body.lng);
         req.body.lat = parseFloat(req.body.lat);
 
         coordinates = [req.body.lng, req.body.lat];
     }
-    else if(req.body && ((!req.body.lng && req.body.lat)||(req.body.lng && !req.body.lat))){
+    else if((!req.body.lng && req.body.lat)||(req.body.lng && !req.body.lat)){
 
         console.log('Error: geo coordinates should be passed together!');
-        response.status = 400;
-        response.message = {message: "Geo coordinates should be passed together."};
+        responseBeforeExec.status = 400;
+        responseBeforeExec.message = {message: "Geo coordinates should be passed together."};
+    }
+
+    if(responseBeforeExec.status !== 200){
+
+        res
+            .status(responseBeforeExec.status)
+            .json(responseBeforeExec.message);
+
+        return;
     }
 
     Hotel
         .findById(hotelID)
         .select("-reviews -rooms")
         .exec(function(err, hotel){
+
+            let response = {
+                status: 200,
+                message: hotel
+            };
 
             if(err){
 
@@ -293,14 +314,45 @@ module.exports.hotelsUpdateOne = function(req, res){
                 return;
             }
 
-            hotel.name = req.body.name;
-            hotel.description = req.body.description;
-            hotel.stars = req.body.stars;
-            hotel.services = _splitArray(req.body.services);
-            hotel.photos = _splitArray(req.body.photos);
-            hotel.currency = req.body.currency;
-            hotel.location.address = req.body.address;
-            hotel.location.coordinates = coordinates;
+            if(req.body.name){
+
+                hotel.name = req.body.name;
+            }
+
+            if(req.body.description){
+
+                hotel.description = req.body.description;
+            }
+
+            if(req.body.stars){
+
+                hotel.stars = req.body.stars;
+            }
+
+            if(req.body.services){
+
+                hotel.services = _splitArray(req.body.services);
+            }
+
+            if(req.body.photos){
+
+                hotel.photos = _splitArray(req.body.photos);
+            }
+
+            if(req.body.currency){
+
+                hotel.currency = req.body.currency;
+            }
+
+            if(req.body.address){
+
+                hotel.location.address = req.body.address;
+            }
+
+            if(coordinates !== []){
+
+                hotel.location.coordinates = coordinates;
+            }
 
             hotel.save(function(err, hotelUpdated){
 
