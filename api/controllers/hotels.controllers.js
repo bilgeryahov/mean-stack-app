@@ -178,20 +178,41 @@ const _splitArray = function(input){
 
 module.exports.hotelsAddOne = function(req, res){
 
+    if(req.body && req.body.stars){
+
+        req.body.stars = parseInt(req.body.stars, 10);
+    }
+
+    let coordinates = [];
+
+    if(req.body && req.body.lng && req.body.lat){
+        req.body.lng = parseFloat(req.body.lng);
+        req.body.lat = parseFloat(req.body.lat);
+
+        coordinates = [req.body.lng, req.body.lat];
+    }
+    else if(req.body && ((!req.body.lng && req.body.lat)||(req.body.lng && !req.body.lat))){
+
+        console.log('Error: geo coordinates should be passed together!');
+
+        res
+            .status(400)
+            .json({message: "Geo coordinates should be passed together."});
+
+        return;
+    }
+
     Hotel
         .create({
             name: req.body.name,
             description: req.body.description,
-            stars: parseInt(req.body.stars, 10),
+            stars: req.body.stars,
             services: _splitArray(req.body.services),
             photos: _splitArray(req.body.photos),
             currency: req.body.currency,
             location: {
                 address: req.body.address,
-                coordinates:[
-                    parseFloat(req.body.lng),
-                    parseFloat(req.body.lat)
-                ]
+                coordinates:coordinates
             }
         }, function(err, hotel){
 
