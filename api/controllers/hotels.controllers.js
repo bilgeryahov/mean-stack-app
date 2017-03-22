@@ -237,6 +237,9 @@ module.exports.hotelsAddOne = function(req, res){
 
 module.exports.hotelsUpdateOne = function(req, res){
 
+    // TODO: If there is an attribute passed and it is not a part of
+    // the entity, find a way to inform about this.
+
     let responseBeforeExec = {
         status: 200,
         message: {message:"OK"}
@@ -314,45 +317,14 @@ module.exports.hotelsUpdateOne = function(req, res){
                 return;
             }
 
-            if(req.body.name){
-
-                hotel.name = req.body.name;
-            }
-
-            if(req.body.description){
-
-                hotel.description = req.body.description;
-            }
-
-            if(req.body.stars){
-
-                hotel.stars = req.body.stars;
-            }
-
-            if(req.body.services){
-
-                hotel.services = _splitArray(req.body.services);
-            }
-
-            if(req.body.photos){
-
-                hotel.photos = _splitArray(req.body.photos);
-            }
-
-            if(req.body.currency){
-
-                hotel.currency = req.body.currency;
-            }
-
-            if(req.body.address){
-
-                hotel.location.address = req.body.address;
-            }
-
-            if(coordinates !== []){
-
-                hotel.location.coordinates = coordinates;
-            }
+            hotel.name = req.body.name || hotel.name;
+            hotel.description = req.body.description || hotel.description;
+            hotel.stars = req.body.stars || hotel.stars;
+            hotel.services = _splitArray(req.body.services) || hotel.services;
+            hotel.photos = _splitArray(req.body.photos) || hotel.photos;
+            hotel.currency = req.body.currency || hotel.currency;
+            hotel.location.address = req.body.address || hotel.location.address;
+            hotel.location.coordinates = coordinates || hotel.location.coordinates;
 
             hotel.save(function(err, hotelUpdated){
 
