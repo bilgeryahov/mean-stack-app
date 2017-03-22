@@ -1,7 +1,3 @@
-/**
- * Created by Bilger on 11-March-17.
- */
-
 'use strict';
 
 let mongoose = require('mongoose');
