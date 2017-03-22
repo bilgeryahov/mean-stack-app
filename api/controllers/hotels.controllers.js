@@ -237,9 +237,6 @@ module.exports.hotelsAddOne = function(req, res){
 
 module.exports.hotelsUpdateOne = function(req, res){
 
-    // TODO: If there is an attribute passed and it is not a part of
-    // the entity, find a way to inform about this.
-
     let responseBeforeExec = {
         status: 200,
         message: {message:"OK"}
@@ -325,6 +322,22 @@ module.exports.hotelsUpdateOne = function(req, res){
             hotel.currency = req.body.currency || hotel.currency;
             hotel.location.address = req.body.address || hotel.location.address;
             hotel.location.coordinates = coordinates || hotel.location.coordinates;
+
+            for(let member in req.body){
+
+                if(req.body.hasOwnProperty(member)){
+
+                    if(!hotel[member]){
+
+                        console.log('Error: the provided PUT parameter is not a valid attribute on a hotel entity!');
+                        res
+                            .status(400)
+                            .json({message: "The provided parameter is not a valid attribute on this entity."});
+
+                        return;
+                    }
+                }
+            }
 
             hotel.save(function(err, hotelUpdated){
 
