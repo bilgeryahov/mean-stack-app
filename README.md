@@ -1,6 +1,6 @@
 # mean-stack-app
 
-###What this project is about?
+### What this project is about?
 
 mean-stack-app is a web application, which has been built using the MEAN stack:
 * MongoDB
