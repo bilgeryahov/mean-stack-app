@@ -32,7 +32,7 @@ const roomSchema = new mongoose.Schema({
 const hotelSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        "default": "Hotel"
     },
     stars: {
         type: Number,
