@@ -1,7 +1,3 @@
-/**
- * Created by Bilger on 12-Feb-17.
- */
-
 'use strict';
 
 require('./api/data/db.js');
@@ -32,5 +28,5 @@ app.use('/api', routes);
 const server = app.listen(app.get('port'), function(){
 
     let port = server.address().port;
-    console.log('Server listening on port: ', port);
+    console.log('Info: Server listening on port: ', port);
 });

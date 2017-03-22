@@ -7,24 +7,24 @@ mongoose.connect(dburl);
 
 mongoose.connection.on('connected', function(){
 
-    console.log('Mongoose connected to ' + dburl);
+    console.log('Info: Mongoose connected to ' + dburl);
 });
 
 mongoose.connection.on('disconnected', function(){
 
-    console.log('Mongoose disconnected from ' + dburl);
+    console.log('Info: Mongoose disconnected from ' + dburl);
 });
 
 mongoose.connection.on('error', function(err){
 
-    console.log('Mongoose connection error ' + err);
+    console.log('Info: Mongoose connection error ' + err);
 });
 
 process.on('SIGINT', function(){
 
     mongoose.connection.close(function(){
 
-        console.log('Mongoose disconnected through app termination SIGINT');
+        console.log('Info: Mongoose disconnected through app termination SIGINT');
         process.exit(0);
     })
 });
@@ -33,7 +33,7 @@ process.on('SIGTERM', function(){
 
     mongoose.connection.close(function(){
 
-        console.log('Mongoose disconnected through app termination SIGTERM');
+        console.log('Info: Mongoose disconnected through app termination SIGTERM');
         process.exit(0);
     })
 });
@@ -42,7 +42,7 @@ process.once('SIGUSR2', function(){
 
     mongoose.connection.close(function(){
 
-        console.log('Mongoose disconnected through app termination SIGUSR2');
+        console.log('Info: Mongoose disconnected through app termination SIGUSR2');
         process.kill(process.pid, 'SIGUSR2');
     })
 });
