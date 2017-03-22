@@ -41,13 +41,22 @@ const hotelSchema = new mongoose.Schema({
         "default": 0
     },
     services: [String],
-    description: String,
+    description: {
+        type: String,
+        "default": "No description"
+    },
     photos: [String],
-    currency: String,
+    currency: {
+        type: String,
+        "default": "Not specified"
+    },
     reviews: [reviewSchema],
     rooms: [roomSchema],
     location: {
-        address: String,
+        address: {
+            type: String,
+            "default": "Not specified"
+        },
         // Always store coordinates longitude E/W, latitude N/S order
         coordinates: {
             type: [Number],
