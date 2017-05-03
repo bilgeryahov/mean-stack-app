@@ -1,12 +1,13 @@
 angular.module('meanhotel')
     .controller('HotelController', HotelController);
 
-function HotelController($http, $routeParams) {
+function HotelController(hotelDataFactory, $routeParams) {
     const vm = this; //view - model
     const id = $routeParams.id;
 
-    $http.get('/api/hotels/' + id)
-        .then(function (response) {
-           vm.hotel = response.data;
-        });
+    hotelDataFactory.hotelDisplay(id).then(function (response) {
+        vm.hotel = response.data;
+    }, function (error) {
+        console.error(error.statusText);
+    })
 }
