@@ -23,6 +23,7 @@ app.use('/node_modules', express.static(__dirname + '/node_modules'));
 // Runs before API routes run. Extended is false,
 // since we do need access to arrays and strings only.
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 app.use('/api', routes);
 
