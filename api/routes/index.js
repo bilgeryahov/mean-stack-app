@@ -11,7 +11,7 @@ const ctrlUsers = require('../controllers/users.controllers');
 
 router
     .route('/hotels')
-    .get(ctrlUsers.authenticate, ctrlHotels.hotelsGetAll)
+    .get(ctrlHotels.hotelsGetAll)
     .post(ctrlHotels.hotelsAddOne);
 
 router
@@ -25,7 +25,7 @@ router
 router
     .route('/hotels/:hotelID/reviews')
     .get(ctrlReviews.reviewsGetAll)
-    .post(ctrlReviews.reviewsAddOne);
+    .post(ctrlUsers.authenticate, ctrlReviews.reviewsAddOne);
 
 router
     .route('/hotels/:hotelID/reviews/:reviewID')
