@@ -57,6 +57,7 @@ const runGeoQuery = function(req, res){
 };
 
 module.exports.hotelsGetAll = function(req, res){
+    console.log('Requested by: ' + req.user);
 
     let offset = 0;
     let count = 5;
