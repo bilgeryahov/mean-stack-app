@@ -7,6 +7,10 @@ body{
     margin-bottom: 60px;
 }
 
+body > .container{
+    padding-top: 60px;
+}
+
 .padded{
     padding-top: 30px;
 }

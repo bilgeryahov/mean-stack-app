@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "angular": "^1.6.4",
+    "angular-jwt": "^0.1.9",
     "angular-route": "^1.6.4",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.16.1",
